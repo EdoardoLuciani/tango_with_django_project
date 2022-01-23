@@ -1,13 +1,17 @@
 from statistics import mode
 from django.db import models
-
-from rango import views
+from django.template.defaultfilters import slugify
 
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
     views = models.PositiveIntegerField(default = 0)
     likes = models.PositiveIntegerField(default = 0)
+    slug = models.SlugField(unique = True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = 'Categories'
